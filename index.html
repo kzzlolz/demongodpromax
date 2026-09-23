@@ -163,7 +163,7 @@ body {
     font-size: 13px;
 }
 
-/* Floating White Rose Badge (Placed beside status) */
+/* Floating White Rose Badge */
 .badge-container {
     position: relative;
     display: inline-flex;
@@ -241,9 +241,39 @@ body {
     color: #dcd0ff;
     font-size: 14px;
     line-height: 1.6;
+    margin-bottom: 18px;
 }
 
-/* GIFT MODAL FIXED Z-INDEX */
+/* Interactive Buttons Row */
+.links {
+    display: flex;
+    gap: 12px;
+}
+
+.link-button {
+    flex: 1;
+    padding: 13px;
+    border-radius: 15px;
+    text-decoration: none;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    font-family: "Cinzel", serif;
+    font-size: 13px;
+    background: rgba(106, 13, 173, 0.6);
+    border: 1px solid rgba(147, 112, 219, 0.4);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.link-button:hover {
+    transform: translateY(-4px) scale(1.02);
+    background: rgba(123, 44, 191, 0.85);
+    box-shadow: 0 8px 20px rgba(138, 43, 226, 0.4);
+}
+
+/* GIFT MODAL */
 .gift-overlay {
     position: fixed;
     top: 0;
@@ -329,7 +359,7 @@ body {
         <div class="gift-message">
             Thank you for being with me for the past 2-3 years. Thanks for all your comfort and concern whenever I was in need of help, and thank you for the years spent making my life more exclusive and meaningful. You're appreciated more than words can say.
         </div>
-        <button class="claim-btn" id="claimBtn">Claim "The Ivory Standard" Badge ✨</button>
+        <button class="claim-btn" id="claimBtn">Claim a badge &lt;3</button>
     </div>
 </div>
 
@@ -370,20 +400,36 @@ body {
         <div class="about">
             A dream about you.
         </div>
+
+        <!-- Working Button Row -->
+        <div class="links">
+            <a class="link-button" href="https://discord.com" target="_blank">
+                💬 Discord Profile
+            </a>
+            <button class="link-button" id="specialBtn" type="button">
+                ✨ Special Note
+            </button>
+        </div>
     </div>
 </div>
 
 <script>
-const firebaseConfig = {
-    apiKey: "AIzaSyD-TestKey-DemoAppForYou12345",
-    authDomain: "demongod-gift-app.firebaseapp.com",
-    projectId: "demongod-gift-app",
-    storageBucket: "demongod-gift-app.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "1:123:web:abc"
-};
+// 1. BUTTONS SETUP (Runs immediately, completely safe from network errors)
+document.getElementById("specialBtn").addEventListener("click", () => {
+    alert("You're doing great! Keep shining >:3");
+});
 
+// 2. FIREBASE / GIFT SETUP
 try {
+    const firebaseConfig = {
+        apiKey: "AIzaSyD-TestKey-DemoAppForYou12345",
+        authDomain: "demongod-gift-app.firebaseapp.com",
+        projectId: "demongod-gift-app",
+        storageBucket: "demongod-gift-app.appspot.com",
+        messagingSenderId: "123456789",
+        appId: "1:123:web:abc"
+    };
+
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     
@@ -425,6 +471,7 @@ try {
     });
 
 } catch (err) {
+    // Fallback if anything blocks Firebase
     document.getElementById("giftModal").classList.remove("hidden");
     document.getElementById("claimBtn").addEventListener("click", () => {
         document.getElementById("giftModal").classList.add("hidden");
