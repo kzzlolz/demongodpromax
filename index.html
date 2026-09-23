@@ -6,7 +6,7 @@
 
 <title>DemonGod's Profile</title>
 
-<link rel="icon" type="image/jpeg" href="https://i.ibb.co/nMC6jcHj/d.jpg">
+<link rel="icon" type="image/jpeg" href="https://i.ibb.co/Ldt4t8kn/c516abf15c71455a6ce60ec1e612f9b0.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
 
 <!-- Firebase App & Firestore SDKs -->
@@ -138,6 +138,15 @@ body {
     font-size: 13px;
 }
 
+/* Status & Badge Row */
+.status-badge-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
 .status-bubble {
     display: flex;
     align-items: center;
@@ -146,8 +155,6 @@ body {
     border: 1px solid rgba(138, 43, 226, 0.4);
     padding: 8px 14px;
     border-radius: 15px;
-    margin-bottom: 18px;
-    width: fit-content;
     box-shadow: 0 4px 15px rgba(0,0,0,0.4);
 }
 
@@ -156,7 +163,7 @@ body {
     font-size: 13px;
 }
 
-/* Floating White Rose Badge */
+/* Floating White Rose Badge (Placed beside status) */
 .badge-container {
     position: relative;
     display: inline-flex;
@@ -166,7 +173,6 @@ body {
     cursor: pointer;
     animation: badgeFloat 3s ease-in-out infinite;
     vertical-align: middle;
-    margin-left: 5px;
 }
 
 @keyframes badgeFloat {
@@ -175,7 +181,7 @@ body {
 }
 
 .inline-rose {
-    width: 32px;
+    width: 34px;
     height: auto;
     display: block;
     filter: drop-shadow(0 0 8px rgba(220, 220, 255, 0.8));
@@ -237,7 +243,7 @@ body {
     line-height: 1.6;
 }
 
-/* GIFT MODAL */
+/* GIFT MODAL FIXED Z-INDEX */
 .gift-overlay {
     position: fixed;
     top: 0;
@@ -249,7 +255,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100,0;
+    z-index: 9999;
     transition: opacity 0.4s ease;
 }
 
@@ -333,7 +339,7 @@ body {
             <div class="avatar-container">
                 <div class="neon-ring"></div>
                 <div class="avatar-circle-wrapper">
-                    <img class="avatar" src="https://i.ibb.co/nMC6jcHj/d.jpg" alt="Avatar">
+                    <img class="avatar" src="https://i.ibb.co/Ldt4t8kn/c516abf15c71455a6ce60ec1e612f9b0.jpg" alt="Avatar">
                 </div>
             </div>
 
@@ -345,27 +351,29 @@ body {
             </div>
         </div>
 
-        <div class="status-bubble">
-            <span>👻</span>
-            <span>California maki sushi roll</span>
-        </div>
+        <!-- Status & White Rose Badge Row -->
+        <div class="status-badge-row">
+            <div class="status-bubble">
+                <span>👻</span>
+                <span>California maki sushi roll</span>
+            </div>
 
-        <div class="about">
-            A dream about you.
             <span class="badge-container">
-                <img class="inline-rose" src="https://i.ibb.co/843110s5/white-rose.png" alt="White Rose Badge">
+                <img class="inline-rose" src="https://i.ibb.co/B2Cfp0jF/571eb3e7a8a1768dc7c09f5efcdde996.jpg" alt="White Rose Badge">
                 <div class="badge-tooltip">
                     <div class="tooltip-title">The Ivory Standard</div>
                     <div class="tooltip-desc">Life was hard to deal with, but you still managed to break through, even if you lost someone you treasured alot.</div>
                 </div>
             </span>
         </div>
+
+        <div class="about">
+            A dream about you.
+        </div>
     </div>
 </div>
 
 <script>
-// --- FIREBASE CONFIGURATION (Global Cloud Storage) ---
-// (We use a public sandbox project config so it works immediately for testing!)
 const firebaseConfig = {
     apiKey: "AIzaSyD-TestKey-DemoAppForYou12345",
     authDomain: "demongod-gift-app.firebaseapp.com",
@@ -375,10 +383,6 @@ const firebaseConfig = {
     appId: "1:123:web:abc"
 };
 
-// If you want to use your own free Firebase later, you can replace the config above with yours.
-// For now, let's use a fallback memory storage combined with global simulation if Firebase fails, 
-// or set up standard Firestore sync:
-
 try {
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
@@ -387,17 +391,14 @@ try {
     const claimBtn = document.getElementById("claimBtn");
     const docRef = db.collection("gifts").doc("demongod_status");
 
-    // Check global status from cloud on load
     docRef.get().then((doc) => {
         if (!doc.exists || !doc.data().claimed) {
-            giftModal.classList.remove("hidden"); // Show globally if not claimed yet
+            giftModal.classList.remove("hidden");
         }
     }).catch(() => {
-        // Fallback if offline
         giftModal.classList.remove("hidden");
     });
 
-    // Claim button action (updates cloud globally)
     claimBtn.addEventListener("click", () => {
         docRef.set({ claimed: true }).then(() => {
             giftModal.style.opacity = "0";
@@ -407,7 +408,7 @@ try {
         });
     });
 
-    // SECRET RESET TRIGGER: Press 'R' key 3 times rapidly to reset it back to unclaimed!
+    // SECRET RESET: Press 'R' key 3 times rapidly
     let rPressCount = 0;
     window.addEventListener("keydown", (e) => {
         if (e.key.toLowerCase() === 'r') {
@@ -419,12 +420,11 @@ try {
                 });
                 rPressCount = 0;
             }
-            setTimeout(() => { rPressCount = 0; }, 1500); // Reset counter if too slow
+            setTimeout(() => { rPressCount = 0; }, 1500);
         }
     });
 
 } catch (err) {
-    // Fallback if any network error blocks Firebase
     document.getElementById("giftModal").classList.remove("hidden");
     document.getElementById("claimBtn").addEventListener("click", () => {
         document.getElementById("giftModal").classList.add("hidden");
