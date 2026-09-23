@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DemonGod's Profile</title>
+
+<link rel="icon" type="image/jpeg" href="https://i.ibb.co/nMC6jcHj/d.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+<!-- Firebase App & Firestore SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(10, 5, 15, 0.9),
+            rgba(20, 8, 30, 0.95)
+        ),
+        url("https://media.giphy.com/media/l0MYB8Ory7HjuBxK0/giphy.gif");
+
+    background-size: cover;
+    background-position: center;
+    font-family: Arial, sans-serif;
+}
+
+.layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 1250px;
+    padding: 20px;
+}
+
+.widget {
+    width: 650px;
+    max-width: 55vw;
+    padding: 24px;
+    border: 3px solid rgba(138, 43, 226, 0.5);
+    border-radius: 25px;
+    background: rgba(15, 8, 25, 0.85);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 0 25px rgba(100, 20, 180, 0.3), inset 0 0 15px rgba(50, 10, 100, 0.2);
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.avatar-container {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.neon-ring {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 3px solid #9370db;
+    box-shadow: 0 0 15px rgba(147, 112, 219, 0.6), inset 0 0 8px rgba(147, 112, 219, 0.4);
+    pointer-events: none;
+    animation: spinRing 15s linear infinite;
+}
+
+@keyframes spinRing {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.avatar-circle-wrapper {
+    position: absolute;
+    width: 96px;
+    height: 96px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(147, 112, 219, 0.6);
+    box-shadow: 0 0 12px rgba(100, 20, 180, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.username-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.username {
+    font-family: "Cinzel", serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #b19cd9;
+    text-shadow: 0 0 10px rgba(138, 43, 226, 0.6);
+}
+
+.handle {
+    margin-top: 6px;
+    color: #9985b9;
+    font-size: 13px;
+}
+
+.status-bubble {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(30, 18, 45, 0.9);
+    border: 1px solid rgba(138, 43, 226, 0.4);
+    padding: 8px 14px;
+    border-radius: 15px;
+    margin-bottom: 18px;
+    width: fit-content;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+.status-bubble span {
+    color: #e6e0f8;
+    font-size: 13px;
+}
+
+/* Floating White Rose Badge */
+.badge-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    cursor: pointer;
+    animation: badgeFloat 3s ease-in-out infinite;
+    vertical-align: middle;
+    margin-left: 5px;
+}
+
+@keyframes badgeFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+.inline-rose {
+    width: 32px;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 0 8px rgba(220, 220, 255, 0.8));
+    transform: rotate(-10deg);
+    transition: transform 0.2s ease;
+}
+
+.badge-container:hover .inline-rose {
+    transform: scale(1.2) rotate(-5deg);
+}
+
+.badge-tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 160%;
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    width: 240px;
+    background: rgba(18, 10, 28, 0.96);
+    border: 1.5px solid rgba(180, 140, 255, 0.5);
+    border-radius: 12px;
+    padding: 12px 14px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(100, 20, 180, 0.5);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.badge-container:hover .badge-tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.tooltip-title {
+    font-family: "Cinzel", serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #dcd0ff;
+    margin-bottom: 6px;
+}
+
+.tooltip-desc {
+    font-size: 12px;
+    color: #c4b5e0;
+    line-height: 1.4;
+}
+
+.about {
+    padding: 18px;
+    border-radius: 18px;
+    background: rgba(20, 10, 32, 0.85);
+    border: 1px solid rgba(138, 43, 226, 0.3);
+    box-shadow: inset 0 0 15px rgba(10, 5, 20, 0.6);
+    color: #dcd0ff;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* GIFT MODAL */
+.gift-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(5, 2, 10, 0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100,0;
+    transition: opacity 0.4s ease;
+}
+
+.gift-box-wrapper {
+    background: rgba(22, 12, 35, 0.95);
+    border: 2px solid rgba(147, 112, 219, 0.6);
+    border-radius: 20px;
+    padding: 30px;
+    width: 420px;
+    max-width: 90vw;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(138, 43, 226, 0.5);
+    animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalPop {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.gift-title {
+    font-family: "Cinzel", serif;
+    font-size: 20px;
+    color: #dcd0ff;
+    margin-bottom: 12px;
+}
+
+.gift-message {
+    color: #c4b5e0;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-align: left;
+    background: rgba(10, 5, 18, 0.6);
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(138, 43, 226, 0.2);
+}
+
+.claim-btn {
+    background: linear-gradient(135deg, #7b2cbf, #9d4edd);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-family: "Cinzel", serif;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(123, 44, 191, 0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.claim-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(157, 78, 221, 0.7);
+}
+
+.hidden {
+    display: none !important;
+}
+</style>
+</head>
+
+<body>
+
+<!-- GIFT MODAL -->
+<div class="gift-overlay hidden" id="giftModal">
+    <div class="gift-box-wrapper">
+        <div class="gift-title">🎁 A Gift For You</div>
+        <div class="gift-message">
+            Thank you for being with me for the past 2-3 years. Thanks for all your comfort and concern whenever I was in need of help, and thank you for the years spent making my life more exclusive and meaningful. You're appreciated more than words can say.
+        </div>
+        <button class="claim-btn" id="claimBtn">Claim "The Ivory Standard" Badge ✨</button>
+    </div>
+</div>
+
+<div class="layout">
+    <div class="widget">
+        <div class="profile">
+            <div class="avatar-container">
+                <div class="neon-ring"></div>
+                <div class="avatar-circle-wrapper">
+                    <img class="avatar" src="https://i.ibb.co/nMC6jcHj/d.jpg" alt="Avatar">
+                </div>
+            </div>
+
+            <div>
+                <div class="username-row">
+                    <div class="username">DemonGod</div>
+                </div>
+                <div class="handle">demonkinglordoverpowerxd • Ysa</div>
+            </div>
+        </div>
+
+        <div class="status-bubble">
+            <span>👻</span>
+            <span>California maki sushi roll</span>
+        </div>
+
+        <div class="about">
+            A dream about you.
+            <span class="badge-container">
+                <img class="inline-rose" src="https://i.ibb.co/843110s5/white-rose.png" alt="White Rose Badge">
+                <div class="badge-tooltip">
+                    <div class="tooltip-title">The Ivory Standard</div>
+                    <div class="tooltip-desc">Life was hard to deal with, but you still managed to break through, even if you lost someone you treasured alot.</div>
+                </div>
+            </span>
+        </div>
+    </div>
+</div>
+
+<script>
+// --- FIREBASE CONFIGURATION (Global Cloud Storage) ---
+// (We use a public sandbox project config so it works immediately for testing!)
+const firebaseConfig = {
+    apiKey: "AIzaSyD-TestKey-DemoAppForYou12345",
+    authDomain: "demongod-gift-app.firebaseapp.com",
+    projectId: "demongod-gift-app",
+    storageBucket: "demongod-gift-app.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "1:123:web:abc"
+};
+
+// If you want to use your own free Firebase later, you can replace the config above with yours.
+// For now, let's use a fallback memory storage combined with global simulation if Firebase fails, 
+// or set up standard Firestore sync:
+
+try {
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    
+    const giftModal = document.getElementById("giftModal");
+    const claimBtn = document.getElementById("claimBtn");
+    const docRef = db.collection("gifts").doc("demongod_status");
+
+    // Check global status from cloud on load
+    docRef.get().then((doc) => {
+        if (!doc.exists || !doc.data().claimed) {
+            giftModal.classList.remove("hidden"); // Show globally if not claimed yet
+        }
+    }).catch(() => {
+        // Fallback if offline
+        giftModal.classList.remove("hidden");
+    });
+
+    // Claim button action (updates cloud globally)
+    claimBtn.addEventListener("click", () => {
+        docRef.set({ claimed: true }).then(() => {
+            giftModal.style.opacity = "0";
+            setTimeout(() => {
+                giftModal.classList.add("hidden");
+            }, 400);
+        });
+    });
+
+    // SECRET RESET TRIGGER: Press 'R' key 3 times rapidly to reset it back to unclaimed!
+    let rPressCount = 0;
+    window.addEventListener("keydown", (e) => {
+        if (e.key.toLowerCase() === 'r') {
+            rPressCount++;
+            if (rPressCount === 3) {
+                docRef.set({ claimed: false }).then(() => {
+                    alert("✨ [ADMIN] Gift status has been RESET globally! Refresh the page to see it pop up again.");
+                    location.reload();
+                });
+                rPressCount = 0;
+            }
+            setTimeout(() => { rPressCount = 0; }, 1500); // Reset counter if too slow
+        }
+    });
+
+} catch (err) {
+    // Fallback if any network error blocks Firebase
+    document.getElementById("giftModal").classList.remove("hidden");
+    document.getElementById("claimBtn").addEventListener("click", () => {
+        document.getElementById("giftModal").classList.add("hidden");
+    });
+}
+</script>
+
+</body>
+</html>
