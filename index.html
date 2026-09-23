@@ -414,21 +414,22 @@ body {
 </div>
 
 <script>
-// 1. BUTTONS SETUP (Runs immediately, completely safe from network errors)
+// 1. Working Button Handlers
 document.getElementById("specialBtn").addEventListener("click", () => {
     alert("You're doing great! Keep shining >:3");
 });
 
-// 2. FIREBASE / GIFT SETUP
+// 2. Firebase Live Database Integration
 try {
     const firebaseConfig = {
-        apiKey: "AIzaSyD-TestKey-DemoAppForYou12345",
-        authDomain: "demongod-gift-app.firebaseapp.com",
-        projectId: "demongod-gift-app",
-        storageBucket: "demongod-gift-app.appspot.com",
-        messagingSenderId: "123456789",
-        appId: "1:123:web:abc"
-    };
+  apiKey: "AIzaSyBC5Er8g_lZm0i6pM1Nmt5yyL_chqDmaJU",
+  authDomain: "demongod-s-gift.firebaseapp.com",
+  projectId: "demongod-s-gift",
+  storageBucket: "demongod-s-gift.firebasestorage.app",
+  messagingSenderId: "788087075835",
+  appId: "1:788087075835:web:7f50eeb6b262788b8e515e",
+  measurementId: "G-TR04G4895T"
+};
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
@@ -471,7 +472,7 @@ try {
     });
 
 } catch (err) {
-    // Fallback if anything blocks Firebase
+    // Fallback if config is left unconfigured
     document.getElementById("giftModal").classList.remove("hidden");
     document.getElementById("claimBtn").addEventListener("click", () => {
         document.getElementById("giftModal").classList.add("hidden");
