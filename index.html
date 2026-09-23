@@ -9,9 +9,10 @@
 <link rel="icon" type="image/jpeg" href="https://i.ibb.co/Ldt4t8kn/c516abf15c71455a6ce60ec1e612f9b0.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Playfair+Display:ital,wght@0,600;1,400&family=Press+Start+2P&display=swap" rel="stylesheet">
 
-<!-- Firebase App & Firestore SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<script src="config.js"></script>
 
 <style>
 * {
@@ -29,10 +30,10 @@ body {
     background:
         linear-gradient(
             180deg,
-            rgba(15, 5, 25, 0.85),
-            rgba(30, 10, 45, 0.95)
+            rgba(15, 5, 25, 0.75),
+            rgba(30, 10, 45, 0.85)
         ),
-        url("https://media.giphy.com/media/l0MYB8Ory7HjuBxK0/giphy.gif");
+        url("https://www.image2url.com/r2/default/gifs/1790155737728-f9611a65-3dfc-464c-92d0-e152f76bd1e5.gif");
 
     background-size: cover;
     background-position: center;
@@ -84,7 +85,7 @@ body {
     align-items: center;
     gap: 18px;
     margin-bottom: 20px;
-    margin-top: -50px; /* Pulls avatar up slightly over the banner edge like Discord */
+    margin-top: -50px;
 }
 
 .avatar-container {
@@ -143,8 +144,9 @@ body {
 .username-row {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     margin-top: 35px;
+    flex-wrap: wrap;
 }
 
 .username {
@@ -155,45 +157,7 @@ body {
     text-shadow: 0 0 10px rgba(138, 43, 226, 0.6);
 }
 
-.handle {
-    margin-top: 6px;
-    color: #9985b9;
-    font-size: 13px;
-}
-
-.stylish-pronoun {
-    font-family: "Playfair Display", serif;
-    font-style: italic;
-    color: #d8b4fe;
-    font-weight: 600;
-}
-
-/* Status & Badge Row */
-.status-badge-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 18px;
-    flex-wrap: wrap;
-}
-
-.status-bubble {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(30, 18, 45, 0.9);
-    border: 1px solid rgba(138, 43, 226, 0.4);
-    padding: 8px 14px;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-}
-
-.status-bubble span {
-    color: #e6e0f8;
-    font-size: 13px;
-}
-
-/* Floating Badge */
+/* Badge BESIDE Name (No Glow) */
 .badge-container {
     position: relative;
     display: inline-flex;
@@ -201,26 +165,19 @@ body {
     justify-content: center;
     background: transparent;
     cursor: pointer;
-    animation: badgeFloat 3s ease-in-out infinite;
     vertical-align: middle;
 }
 
-@keyframes badgeFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
-}
-
 .inline-badge {
-    width: 34px;
+    width: 26px;
     height: auto;
     display: block;
-    filter: drop-shadow(0 0 8px rgba(220, 220, 255, 0.8));
-    transform: rotate(-10deg);
+    filter: none; 
     transition: transform 0.2s ease;
 }
 
 .badge-container:hover .inline-badge {
-    transform: scale(1.2) rotate(-5deg);
+    transform: scale(1.15);
 }
 
 .badge-tooltip {
@@ -230,7 +187,7 @@ body {
     bottom: 160%;
     left: 50%;
     transform: translateX(-50%) translateY(5px);
-    width: 240px;
+    width: 220px;
     background: rgba(18, 10, 28, 0.96);
     border: 1.5px solid rgba(180, 140, 255, 0.5);
     border-radius: 12px;
@@ -262,6 +219,44 @@ body {
     line-height: 1.4;
 }
 
+.handle {
+    margin-top: 6px;
+    color: #9985b9;
+    font-size: 13px;
+}
+
+.stylish-pronoun {
+    font-family: "Playfair Display", serif;
+    font-style: italic;
+    color: #d8b4fe;
+    font-weight: 600;
+}
+
+/* Status Bubble Row */
+.status-badge-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.status-bubble {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(30, 18, 45, 0.9);
+    border: 1px solid rgba(138, 43, 226, 0.4);
+    padding: 8px 14px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+.status-bubble span {
+    color: #e6e0f8;
+    font-size: 13px;
+}
+
 .about {
     padding: 18px;
     border-radius: 18px;
@@ -283,37 +278,40 @@ body {
     letter-spacing: 1px;
 }
 
-/* Stats Box */
-.stats-box {
-    padding: 16px 18px;
-    border-radius: 18px;
+/* 4-Box Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.stat-card {
     background: rgba(20, 10, 32, 0.85);
     border: 1px solid rgba(138, 43, 226, 0.3);
-    box-shadow: inset 0 0 15px rgba(10, 5, 20, 0.6);
-    color: #dcd0ff;
-    font-size: 13px;
-    line-height: 1.8;
+    border-radius: 16px;
+    padding: 14px;
+    box-shadow: inset 0 0 12px rgba(10, 5, 20, 0.5);
+    transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-.stats-row {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid rgba(138, 43, 226, 0.15);
-    padding: 4px 0;
-}
-
-.stats-row:last-child {
-    border-bottom: none;
+.stat-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(147, 112, 219, 0.6);
 }
 
 .stat-label {
+    font-size: 11px;
     color: #9985b9;
-    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+    font-family: "Cinzel", serif;
 }
 
 .stat-value {
+    font-size: 13px;
     color: #e6e0f8;
-    text-align: right;
+    font-weight: 600;
 }
 
 /* GIFT MODAL */
@@ -395,7 +393,6 @@ body {
 
 <body>
 
-<!-- GIFT MODAL -->
 <div class="gift-overlay hidden" id="giftModal">
     <div class="gift-box-wrapper">
         <div class="gift-title">🎁 A Gift For You</div>
@@ -408,7 +405,6 @@ body {
 
 <div class="layout">
     <div class="widget">
-        <!-- Discord-style Banner GIF -->
         <div class="banner-container">
             <img class="banner-img" src="https://www.image2url.com/r2/default/gifs/1790153473607-0607060a-59ad-47b6-b48d-197b2b008d8e.gif" alt="Profile Banner">
         </div>
@@ -425,58 +421,51 @@ body {
                 <div>
                     <div class="username-row">
                         <div class="username">DemonGod</div>
+                        <span class="badge-container">
+                            <img class="inline-badge" src="https://cdn.phototourl.com/free/2026-09-23-24d952ba-8bd0-4637-8f0b-4c0f1958bde9.png" alt="Custom Badge">
+                            <div class="badge-tooltip">
+                                <div class="tooltip-title">A new beginning...?</div>
+                            </div>
+                        </span>
                     </div>
                     <div class="handle">demonkinglordoverpowerxd • <span class="stylish-pronoun">he/him</span></div>
                 </div>
             </div>
 
-            <!-- Status & Badge Row -->
             <div class="status-badge-row">
                 <div class="status-bubble">
                     <span>👻</span>
                     <span>California maki sushi roll</span>
                 </div>
-
-                <span class="badge-container">
-                    <img class="inline-badge" src="https://cdn.phototourl.com/free/2026-09-23-24d952ba-8bd0-4637-8f0b-4c0f1958bde9.png" alt="Custom Badge">
-                    <div class="badge-tooltip">
-                        <div class="tooltip-title">The Ivory Standard</div>
-                        <div class="tooltip-desc">Life was hard to deal with, but you still managed to break through, even if you lost someone you treasured a lot.</div>
-                    </div>
-                </span>
             </div>
 
-            <!-- Bio Section -->
             <div class="about">
                 <div class="bio-title">Bio</div>
                 A dream about you.
             </div>
 
-            <!-- Stats Box -->
-            <div class="stats-box">
-                <div class="stats-row">
-                    <span class="stat-label">Interests:</span>
-                    <span class="stat-value">gaming, spending money</span>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Interests</div>
+                    <div class="stat-value">Gaming, spending money</div>
                 </div>
-                <div class="stats-row">
-                    <span class="stat-label">Birthday:</span>
-                    <span class="stat-value">15/10</span>
+                <div class="stat-card">
+                    <div class="stat-label">Birthday</div>
+                    <div class="stat-value">15/10</div>
                 </div>
-                <div class="stats-row">
-                    <span class="stat-label">Status:</span>
-                    <span class="stat-value">single adult</span>
+                <div class="stat-card">
+                    <div class="stat-label">Status</div>
+                    <div class="stat-value">Single Adult</div>
                 </div>
-                <div class="stats-row">
-                    <span class="stat-label">Favourite Food:</span>
-                    <span class="stat-value">rice noodle & pork rice</span>
+                <div class="stat-card">
+                    <div class="stat-label">Favourite Food</div>
+                    <div class="stat-value">Rice Noodle & Pork Rice</div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-    <script src="config.js"></script>
-    
 <script>
 // Firebase Live Database Integration
 try {
